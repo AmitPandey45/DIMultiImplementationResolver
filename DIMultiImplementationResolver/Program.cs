@@ -37,11 +37,19 @@ namespace DIMultiImplementationResolver
             IServiceCollection services = Startup.ConfigureService();
             var serviceProvider = services.BuildServiceProvider();
 
+            var onboardService = serviceProvider.GetService<IOnboardService>();
+            var renewService = serviceProvider.GetService<IRenewService>();
+            var reinstateService = serviceProvider.GetService<IReinstateService>();
+
+            onboardService.Execute("Sample data for Onboard");
+            renewService.Execute("Sample data for Renew");
+            reinstateService.Execute("Sample data for Reinstate");
+
             var serviceResolver = serviceProvider.GetService<ServiceResolver>();
             var myService = new MyService(serviceResolver(ServiceType.EventLogger));
             var myService00 = new MyService(serviceResolver);
             ////var myService00 = serviceProvider.GetService<MyService>();
-            ///var fsdf = new MyService(ServiceResolver(ServiceType.FileLogger));
+            ////var fsdf = new MyService(ServiceResolver(ServiceType.FileLogger));
             myService.Add(1, 2);
 
             var funcWithServiceType = GetServiceResolver();

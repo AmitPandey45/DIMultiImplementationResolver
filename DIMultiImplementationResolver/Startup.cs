@@ -16,10 +16,10 @@ namespace DIMultiImplementationResolver
             services.AddTransient<MyService>();
             services.AddTransient<MyService1>();
             services.AddTransient<MyService2>();
+
             services.AddTransient<ICustomLogger, FileLogger>();
             services.AddTransient<ICustomLogger, DbLogger>();
             services.AddTransient<ICustomLogger, EventLogger>();
-
             services.AddTransient<FileLogger>();
             services.AddTransient<DbLogger>();
             services.AddTransient<EventLogger>();
@@ -38,6 +38,19 @@ namespace DIMultiImplementationResolver
                         return null;
                 }
             });
+
+            services.AddTransient<IMember, MemberOnBoarding>();
+            services.AddTransient<IMember, RenewMembership>();
+            services.AddTransient<IMember, ReinstateMembership>();
+            services.AddTransient<MembershipOrderServiceResolver>(serviceProvider => new MembershipOrderServiceResolver(serviceProvider.GetServices<IMember>()
+            ));
+
+
+            services.AddTransient<IMembershipOrderServiceResolver, MembershipOrderServiceResolver>();
+
+            services.AddTransient<IOnboardService, OnboardService>();
+            services.AddTransient<IRenewService, RenewService>();
+            services.AddTransient<IReinstateService, ReinstateService>();
 
             ////services.BuildServiceProvider();
 
