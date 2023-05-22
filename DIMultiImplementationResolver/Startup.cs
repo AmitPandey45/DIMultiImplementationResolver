@@ -17,6 +17,8 @@ namespace DIMultiImplementationResolver
             services.AddTransient<MyService1>();
             services.AddTransient<MyService2>();
 
+            services.AddTransient<IAwsS3Client, AwsS3Client>();
+
             services.AddTransient<ICustomLogger, FileLogger>();
             services.AddTransient<ICustomLogger, DbLogger>();
             services.AddTransient<ICustomLogger, EventLogger>();

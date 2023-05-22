@@ -37,6 +37,25 @@ namespace DIMultiImplementationResolver
             IServiceCollection services = Startup.ConfigureService();
             var serviceProvider = services.BuildServiceProvider();
 
+            var awsS3Client = serviceProvider.GetService<IAwsS3Client>();
+            string inboundBucketName = AwsS3Client.GetAppSettingKeyValue("S3InboundBucketName");
+            string agendaIdentifier = AwsS3Client.GetAppSettingKeyValue("S3BucketAgendas");
+            string minutesIdentifier = AwsS3Client.GetAppSettingKeyValue("S3BucketMinutes");
+            DateTime currentDate = DateTime.Now.Date;
+            //// For Testing => Convert.ToDateTime("2019-05-16");
+
+            string[] allAgendaFilesFromS3 = awsS3Client.GetFilesNameInDirectory(inboundBucketName, agendaIdentifier).Result;
+
+            string[] allMinutesFilesFromS3 = awsS3Client.GetFilesNameInDirectory(inboundBucketName, minutesIdentifier).Result;
+
+            var fileInfo1 = awsS3Client.GetFileInfo(inboundBucketName, $"{agendaIdentifier}/{allAgendaFilesFromS3[50]}").Result;
+            var fileInfo2 = awsS3Client.GetFileInfo(inboundBucketName, $"{agendaIdentifier}/{allAgendaFilesFromS3[50]}").Result;
+
+            var dirInfo1 = awsS3Client.GetDirectoryInfo(inboundBucketName, $"{agendaIdentifier}").Result;
+            var dirInfo2 = awsS3Client.GetDirectoryInfo(inboundBucketName, $"{agendaIdentifier}").Result;
+
+            return;
+
             var onboardService = serviceProvider.GetService<IOnboardService>();
             var renewService = serviceProvider.GetService<IRenewService>();
             var reinstateService = serviceProvider.GetService<IReinstateService>();
